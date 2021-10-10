@@ -1,0 +1,29 @@
+.top-wrapper-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar {
+  background: none;
+  margin: -10px 0;
+  direction: rtl;
+  /* color: azure; */
+  padding-bottom: 10px;
+}
+
+.top-wrapper-container {
+  flex: 1 1 auto;
+}
+
+.top-wrapper-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-wrapper-sidenav {
+  padding: 20px;
+}
+.mainWrapper {
+  height: 100%;
+}

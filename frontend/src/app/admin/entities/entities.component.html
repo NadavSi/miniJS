@@ -1,0 +1,89 @@
+<div
+  fxLayout="row-reverse"
+  fxLayoutAlign.gt-md="start center"
+  fxLayoutAlign="center center"
+  fxLayoutGap="15px"
+  style="padding: 10px"
+>
+  <div fxFlex="50%" fxFlex.gt-md="10%">
+    <a class="noLink" routerLink="./new">
+      <button
+        pButton
+        type="button"
+        label="צור חדש"
+        class="p-button-raised"
+        style="width: 100%"
+      ></button>
+    </a>
+  </div>
+</div>
+<div class="dtbl">
+  <p-table
+    #usersTbl
+    [value]="entities"
+    styleClass="p-datatable-striped"
+    [(selection)]="selectedEntities"
+    dataKey="code"
+    [autoLayout]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    [scrollable]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  >
+    <ng-template pTemplate="caption">
+      <div class="topSearch">
+        <div>
+          <button
+            pButton
+            label="Clear"
+            class="p-button-outlined"
+            icon="pi pi-filter-slash"
+            (click)="clear(usersTbl)"
+          ></button>
+        </div>
+        <div>
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="applyFilterGlobal(usersTbl, $event, 'contains')"
+              placeholder="חיפוש..."
+            />
+          </span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="width: 3rem">רשומה</th>
+        <th *ngFor="let col of columnsDef">
+          <div fxLayoutAlign="center center">
+          {{col.header}}
+          <p-columnFilter type="text" field="col.name" display="menu"></p-columnFilter>
+        </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="entity"></p-tableCheckbox>
+        </td>
+        <td style="text-align: center">
+          <a routerLink="./{{ entity.id }}"
+            ><img src="{{ iconsPath }}/png-16/store-16x16-729039.png"
+          /></a>
+        </td>
+        <td *ngFor="let col of columnsDef">
+          {{entity[col.field]}}
+      </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

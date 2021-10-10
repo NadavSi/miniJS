@@ -1,0 +1,51 @@
+.top-wrapper-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    180deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(27, 26, 26, 1) 14%,
+    rgba(40, 38, 38, 1) 35%,
+    rgba(51, 49, 49, 1) 56%,
+    rgba(93, 90, 90, 1) 79%,
+    rgba(97, 96, 96, 1) 100%
+  );
+  direction: rtl;
+  /* color: azure; */
+  padding-bottom: 10px;
+  height: 15%;
+}
+
+.mat-toolbar button {
+  color: white;
+}
+
+.mat-drawer-container {
+  background: rgb(97, 96, 96);
+  background: linear-gradient(
+    180deg,
+    rgba(97, 96, 96, 1) 0%,
+    rgba(144, 142, 142, 1) 14%,
+    rgba(170, 170, 170, 1) 35%,
+    rgba(198, 198, 198, 1) 56%,
+    rgba(208, 205, 205, 1) 79%,
+    rgba(237, 234, 234, 1) 100%
+  );
+}
+
+.top-wrapper-container {
+  height: 100%;
+}
+
+mat-drawer {
+  width: 350px;
+}
+
+@media screen and (max-width: 780px) {
+  mat-drawer {
+    width: 100%;
+  }
+}

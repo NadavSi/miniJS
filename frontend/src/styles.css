@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+.formWrapper {
+    padding: 0 0 15px 0;
+    /* background: #c1bcbc; */
+  }
+
+.btn3D {
+    background-image: -webkit-linear-gradient(283deg, rgba(255, 255, 255, 0.1) 50%, transparent 55%),-webkit-linear-gradient(top, rgba(255, 255, 255, 0.15), transparent);
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px #000000 inset,0 0 0 2px rgba(255, 255, 255, 0.15) inset,0 4px 0 0 #3c3d4c,0 4px 0 1px rgba(0, 0, 0, 0.4),0 4px 4px 1px rgba(0, 0, 0, 0.5);
+    /*display: block;*/
+    color: white;
+    position: relative;
+    -webkit-transition: all .2s linear;
+}
+
+.btn3D:active {
+    background-color: #474EDD;
+    top: 4px;
+    box-shadow: 0 0 0 1px #163772 inset,0 0 0 2px rgba(255, 255, 255, 0.15) inset,0 0 0 0 #333797,0 0 0 1px rgba(0, 0, 0, 0.4),0 0px 8px 1px rgba(0, 0, 0, 0.5);
+}
+
+.noLink, .noLink:hover, .noLink:focus {
+    text-decoration: none;
+    color:inherit;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.hebdir {
+    direction: rtl !important;
+}
+
+.hebalign {
+    text-align: right !important;
+}
+
+.fadeUnderline {
+    height: 1px;
+    width: 100%;
+    background: rgb(2,0,36);
+    background: linear-gradient(270deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(255,255,255,1) 78%, rgba(251,254,255,1) 100%);
+}
+
+.hidden {
+    visibility: hidden;
+}

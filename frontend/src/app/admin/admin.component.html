@@ -1,0 +1,10 @@
+<ng-template #loading>
+  <div class="text-center text-danger">
+    <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
+    Loading...
+  </div>
+</ng-template>
+
+<div *ngIf="!isLoading; else loading" style="height: 100%">
+  <app-menu></app-menu>
+</div>

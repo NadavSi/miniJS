@@ -1,0 +1,9 @@
+.dtbl {
+  direction: rtl;
+  margin: auto;
+  width: 95%;
+}
+
+.dtbl td {
+  text-align: right;
+}

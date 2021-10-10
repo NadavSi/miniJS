@@ -1,0 +1,9 @@
+.topSearch {
+  display: flex;
+  flex-direction: row-reverse;
+  place-content: center space-between;
+}
+
+.p-paginator {
+  direction: ltr;
+}

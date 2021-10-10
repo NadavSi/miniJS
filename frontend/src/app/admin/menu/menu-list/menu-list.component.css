@@ -1,0 +1,43 @@
+
+
+.top-wrapper-container {
+  flex: 1 1 auto;
+}
+
+.top-wrapper-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-wrapper-sidenav {
+  padding: 20px;
+}
+.mainWrapper {
+  height: 100%;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  width: 100%;
+}
+:host .mat-list-item.active {
+  background-color: #85a2de;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px 0 0 10px;
+}
+:host:hover > .mat-list-item:not(.expanded), :host:focus > .mat-list-item:not(.expanded) {
+  background-color: lightgreen !important;
+}
+.mat-list-item {
+  padding: 8px 0;
+  width: auto;
+}
+
+.mat-list-item .routeIcon {
+  margin-right: 40px;
+}

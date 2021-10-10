@@ -1,0 +1,24 @@
+
+  <mat-toolbar>
+    <!-- <button mat-icon-button class="top-wrapper-icon" aria-label="Example icon-button with menu icon"
+      (click)="toggleDrawer()">
+      <mat-icon>menu</mat-icon>
+    </button> -->
+    <div style="display: flex; width: 100%; justify-content: space-around">
+      <span>
+        <img src="{{ logosPath }}/shmilLogo.png" />
+      </span>
+    </div>
+    <span class="top-wrapper-spacer"></span>
+  </mat-toolbar>
+
+  <mat-drawer-container class="top-wrapper-container">
+    <!-- <mat-drawer #drawer class="top-wrapper-sidenav" mode="over" position="end">
+      <div>
+        <mat-nav-list style="direction: rtl">
+          <app-menu-list *ngFor="let item of navItems" [item]="item"></app-menu-list>
+        </mat-nav-list>
+      </div>
+    </mat-drawer> -->
+    <router-outlet></router-outlet>
+  </mat-drawer-container>

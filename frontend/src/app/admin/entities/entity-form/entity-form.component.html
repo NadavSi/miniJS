@@ -1,0 +1,62 @@
+<div class="formWrapper">
+  <notifier-container></notifier-container>
+  <ng-template #loading>
+    <div class="text-center">
+      <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
+      Proccessing...
+    </div>
+  </ng-template>
+  <div *ngIf="entityForm && !isLoading else loading" fxLayout="row" fxLayoutAlign="space-evenly center">
+    <mat-card fxFlex="80">
+      <!-- Title of an Card -->
+      <mat-card-title class="hebdir">
+        <div>פרופיל העסק</div>
+        <div class="fadeUnderline"></div>
+      </mat-card-title>
+
+      <mat-card-content class="hebdir">
+        <form
+          id="newForm"
+          [formGroup]="entityForm"
+          (ngSubmit)="onCreate()"
+        >
+          <div fxLayout="row" fxLayoutGap="50px grid">
+            <mat-form-field fxFlex="50" class="hebalign">
+              <input matInput placeholder="שם העסק" formControlName="name" />
+            </mat-form-field>
+            <mat-form-field fxFlex="50" class="hebalign">
+              <input matInput placeholder="מס. ח.פ." formControlName="identitynum" />
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="50px grid">
+            <mat-form-field fxFlex="50" class="hebalign">
+              <input type="tel" matInput placeholder="טלפון" formControlName="phone" />
+            </mat-form-field>
+            <mat-form-field fxFlex="50" class="hebalign">
+              <input matInput type="email" formControlName="email" placeholder="דואל" />
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-form-field fxFlex="100" class="hebalign">
+              <textarea
+                matInput
+                placeholder="כתובת בית העסק"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"
+                formControlName="address"
+
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button form="newForm" mat-raised-button color="accent">שמירה</button>
+        <button mat-raised-button color="primary">ביטול</button>
+        <button mat-raised-button color="default" routerLink="..">חזור</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
