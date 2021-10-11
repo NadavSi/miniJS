@@ -24,6 +24,7 @@ import { MenuComponent } from './admin/menu/menu.component';
 import { MenuListComponent } from './admin/menu/menu-list/menu-list.component';
 import { ButtonModule } from 'primeng/button';
 import { LayoutModule } from '@angular/cdk/layout';
+import { JsFilesComponent } from './admin/js-files/js-files.component';
 
 registerLocaleData(localeHe);
 
@@ -35,7 +36,8 @@ registerLocaleData(localeHe);
     EntitiesComponent,
     EntityFormComponent,
     MenuComponent,
-    MenuListComponent
+    MenuListComponent,
+    JsFilesComponent
   ],
   imports: [
     BrowserModule,

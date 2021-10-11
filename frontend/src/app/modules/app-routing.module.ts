@@ -7,22 +7,19 @@ import { EntityFormComponent } from '../admin/entities/entity-form/entity-form.c
 import { EntitiesComponent } from '../admin/entities/entities.component';
 import { AppComponent } from '../app.component';
 import { AdminComponent } from '../admin/admin.component';
+import { JsFilesComponent } from '../admin/js-files/js-files.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent
-  },
-  {
-    path: ':entity',
     component: AdminComponent,
     children: [
       {
-        path: 'entities',
-        component: EntitiesComponent,
+        path: 'files',
+        component: JsFilesComponent,
       },
       {
-        path: 'entities/:entityid',
+        path: 'files/:entityid',
         component: EntityFormComponent
       }
     ]
