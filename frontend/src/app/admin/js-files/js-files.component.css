@@ -1,0 +1,32 @@
+.dtbl {
+  width: 90%;
+  margin: auto;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileStyle {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.fileStyle button {
+  padding: 0 5px;
+}
+
+.fileStyle span {
+  background: cornsilk;
+  padding: 7px;
+  border: 1px solid;
+  border-radius: 10px;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.uploadBtns button{
+  margin: 0 5px;
+}

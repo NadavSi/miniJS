@@ -12,14 +12,19 @@ import { JsFilesComponent } from '../admin/js-files/js-files.component';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'files',
+    pathMatch: 'full'
+  },
+  {
+    path: 'files',
     component: AdminComponent,
     children: [
       {
-        path: 'files',
+        path: '',
         component: JsFilesComponent,
       },
       {
-        path: 'files/:entityid',
+        path: ':entityid',
         component: EntityFormComponent
       }
     ]

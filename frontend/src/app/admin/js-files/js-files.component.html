@@ -1,21 +1,27 @@
-<div
-  fxLayout="row-reverse"
-  fxLayoutAlign.gt-md="start center"
-  fxLayoutAlign="center center"
-  fxLayoutGap="15px"
-  style="padding: 10px"
->
-  <div fxFlex="50%" fxFlex.gt-md="10%">
-    <a class="noLink" routerLink="./new">
-      <button
-        pButton
-        type="button"
-        label="צור חדש"
-        class="p-button-raised"
-        style="width: 100%"
-      ></button>
-    </a>
+<div>
+  <input type="file" class="fileInput" (change)="onFileSelected($event)" #fileUpload accept=".js" />
+  <div class="fileStyle">
+    <button *ngIf="!fileName; else confirmUpload" mat-raised-button class="btn3D btn-info upload-btn"
+      (click)="fileUpload.click()" ngbTooltip="click to select file">
+      <mat-icon>attach_file</mat-icon>
+    </button>
+    <ng-template #confirmUpload>
+      <div class="uploadBtns">
+        <button mat-raised-button class="btn-warning upload-btn" ngbTooltip="remove seleced file"
+          (click)="onRemoveSelecetd()">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-raised-button class="btn-success upload-btn" ngbTooltip="confirm upload"
+          (click)="onUpladFile()">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+      </div>
+    </ng-template>
+    <span [ngStyle]="{'border': (isJSFile) ? '2px solid black' : '2px solid red'}">{{ fileName || "No file uploaded yet."}}</span>
   </div>
+  <div *ngIf="!isJSFile" style="text-align: center;"><span style="margin: auto;"><b>*only upload .js files
+        please</b></span></div>
+  <span class="top-wrapper-spacer"></span>
 </div>
 <div class="dtbl">
   <p-table
@@ -50,7 +56,7 @@
               pInputText
               type="text"
               (input)="applyFilterGlobal(usersTbl, $event, 'contains')"
-              placeholder="חיפוש..."
+              placeholder="search..."
             />
           </span>
         </div>
@@ -61,7 +67,6 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th style="width: 3rem">רשומה</th>
         <th *ngFor="let col of columnsDef">
           <div fxLayoutAlign="center center">
           {{col.header}}
@@ -74,11 +79,6 @@
       <tr>
         <td>
           <p-tableCheckbox [value]="jsFile"></p-tableCheckbox>
-        </td>
-        <td style="text-align: center">
-          <a routerLink="./{{ jsFile.id }}"
-            ><img src="{{ iconsPath }}/png-16/store-16x16-729039.png"
-          /></a>
         </td>
         <td *ngFor="let col of columnsDef">
           {{jsFile[col.field]}}

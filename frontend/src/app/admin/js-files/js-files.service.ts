@@ -51,4 +51,21 @@ export class JsFilesService {
         });
       }));
   }
+
+  uploadNewFile(file: FormData) {
+    console.log(this.jsFiles);
+    this.httpService.postPatch<any>('files', file, null).subscribe((data) => {
+      const fileObj = data.file;
+      // if (data.status == 1) {
+      //   this.jsFiles.push(fileObj);
+      //   this.jsFilesArry.next([...this.jsFiles]);
+      // } else {
+      //   this.jsFiles = this.jsFiles.filter((item) => item.id !== fileObj.id);
+      //   this.jsFiles.push(fileObj);
+      //   this.jsFilesArry.next([...this.jsFiles]);
+      // }
+      // this.isRefresh.emit(true);
+      // return 'file uploaded';
+    });
+  }
 }
