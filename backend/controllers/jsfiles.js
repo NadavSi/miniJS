@@ -1,4 +1,8 @@
 const JSFile = require("../models/jsfile");
+const minify = require('@node-minify/core');
+const terser = require('@node-minify/terser');
+const formidable = require("formidable");
+const fsReader = require("fs");
 
 const JSFilesLogger = require("beauty-logger");
 const serverPath = require("path");
@@ -21,6 +25,13 @@ const jsfilesLog = new JSFilesLogger({
   onlyPrintInConsole: false,
 });
 
+async function minifyFiles(fileData) {
+  return await minify(fileData, {
+    mangle: true,
+    ecma: 8,
+    compress: false
+  }).code;
+}
 // get all listed jsfiles  
 exports.getJSFiles = (req, res, next) => {
   JSFile.find()
@@ -54,24 +65,34 @@ exports.getJSFile = (req, res, next) => {
 
 // insert new jsfile
 exports.createJSFile = (req, res, next) => {
-  let jsfile = new JSFile(req.body);
-  jsfile.domainid = jsfile.name.replace(' ', '-');
-  jsfile
-    .save()
-    .then((jsfile) => {
-      jsfilesLog.info("new jsfile (" + jsfile.name + ") created");
-      res.status(201).json({
-        message: "JSFile created!",
-        status: 1,
-        jsfile: jsfile.transform()
-      });
-    })
-    .catch((err) => {
-      jsfilesLog.error("registration failed. ERROR: " + err);
-      res.status(500).json({
-        message: "Authentication failed"
-      });
+  let parsed = '';
+  var form = formidable({ keepExtensions: true });
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      next(err);
+      return;
+    }
+    minify({
+      compressor: terser,
+      input: files.jsfileUpload.path,
+      output: 'bar.js',
+      callback: function (err, min) {
+        if (err) {
+          res.status(200).json({
+            status: 0,
+            compressedData: '',
+            error: err
+          });
+        } else { 
+          res.status(200).json({
+            status: 1,
+            compressedData: min
+          });
+        }
+      }
     });
+  });
 };
 
 exports.updateJSFile = (req, res, next) => {

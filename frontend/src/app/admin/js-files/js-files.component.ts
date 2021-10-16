@@ -33,10 +33,10 @@ export class JsFilesComponent implements OnInit {
   constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.jsfilesService.getJsFiles();
-    this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe(jsfiles => {
-      // this.jsfiles = jsfiles;
-    })
+    // this.jsfilesService.getJsFiles();
+    // this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe(jsfiles => {
+    //   // this.jsfiles = jsfiles;
+    // })
   }
 
   applyFilterGlobal(table: Table, $event: any, stringVal: any) {
