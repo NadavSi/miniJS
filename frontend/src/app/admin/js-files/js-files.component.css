@@ -30,3 +30,11 @@
 .uploadBtns button{
   margin: 0 5px;
 }
+
+.modal-header {
+  padding: 5px;
+}
+
+.modal-title {
+  margin: 0;
+}

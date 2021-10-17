@@ -1,45 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { JSFile } from './../../models/file.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JsFilesService } from './js-files.service';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-js-files',
   templateUrl: './js-files.component.html',
   styleUrls: ['./js-files.component.css']
 })
-export class JsFilesComponent implements OnInit {
+export class JsFilesComponent implements OnInit, OnDestroy {
 
-  private jsfilesSubscription!: Subscription;
-  public jsfiles: object[] = [];
+  private jsfilesSubscription: Subscription;
+  jsfiles: JSFile[] = [];
   public selectedjsfiles: [] = [];
+  closeResult = '';
 
   iconsPath = environment.iconsPath;
 
   columnsDef = [
     { field: 'filename', name: 'filename', header: 'File Name' },
     // { field: 'minfilename', name: 'minfilename', header: 'Minified File Name' },
-    { field: 'createdAt', name: 'createdAt', header: 'Created At' },
-    { field: 'updatedAt', name: 'updatedAt', header: 'Updated At' },
-    { field: 'action', name: 'actions', header: 'Actions' }
+    { field: 'createdAt', name: 'createdAt', header: 'Created At', isDate: true },
+    { field: 'updatedAt', name: 'updatedAt', header: 'Updated At', isDate: true }
   ];
 
   fileName: string;
   file: File;
   isJSFile: boolean = true;
 
-  constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute, private dialog: NgbModal) { }
 
   ngOnInit(): void {
-    this.jsfilesService.getJsFiles();
-    this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe(files => {
-      console.log('1');
+    this.jsfiles = this.jsfilesService.getJsFiles();
+    this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe((files: JSFile[]) => {
       this.jsfiles = files;
-
     })
-    console.log(this.jsfilesSubscription);
   }
 
   applyFilterGlobal(table: Table, $event: any, stringVal: any) {
@@ -72,5 +71,27 @@ export class JsFilesComponent implements OnInit {
     formData.append('jsfileUpload', this.file);
     this.jsfilesService.uploadNewFile(formData);
     this.fileName = null;
+  }
+
+  openDialog(content: any) {
+    const dialogRef = this.dialog.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.jsfilesSubscription.unsubscribe();
   }
 }

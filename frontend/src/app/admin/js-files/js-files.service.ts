@@ -1,3 +1,5 @@
+import { JSFile } from './../../models/file.model';
+import { trigger } from '@angular/animations';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,9 +9,9 @@ import { HttpService } from 'src/app/services/http.service';
   providedIn: 'root',
 })
 export class JsFilesService {
-  private jsFile!: object;
-  private jsFiles: object[] = [];
-  private jsFilesArray = new Subject<object[]>();
+  private jsFile!: JSFile;
+  private jsFiles: JSFile[] = [];
+  private jsFilesArray = new Subject<JSFile[]>();
 
   constructor(private httpService: HttpService) { }
 
@@ -17,13 +19,14 @@ export class JsFilesService {
     let minfiles = localStorage.getItem('minfiles');
     if (minfiles != null) {
       this.jsFiles = JSON.parse(minfiles);
-      this.jsFilesArray.next([...JSON.parse(minfiles)]);
-    } else {
-      this.jsFilesArray.next([...this.jsFiles]);
     }
+    console.log(this.jsFiles)
+    this.jsFilesArray.next(this.jsFiles);
+    return this.jsFiles;
   }
 
   getJsFilesList() {
+    // this.jsFilesArray.next([...this.jsFiles])
     return this.jsFilesArray.asObservable();
   }
 
@@ -31,11 +34,11 @@ export class JsFilesService {
     return this.httpService.getRemove<any>(id, 'jsFiles');
   }
 
-  createFile(jsFile: object) {
+  createFile(jsFile: JSFile) {
     return this.httpService.postPatch('jsFiles', jsFile, null);
   }
 
-  updateFile(jsFile: object, jsFileid: string) {
+  updateFile(jsFile: JSFile, jsFileid: string) {
     console.log(jsFile);
     return this.httpService.postPatch('jsFiles', jsFile, jsFileid, 'put');
   }
@@ -43,7 +46,7 @@ export class JsFilesService {
   getJsFilesSelect() {
     return this.httpService.getRemove<any>(null, 'jsFiles').pipe(
       map((data) => {
-        return data.jsFiles.map((jsFile: object) => {
+        return data.jsFiles.map((jsFile: JSFile) => {
           return {
             // id: jsFile.id,
             // name: jsFile.name,
@@ -59,40 +62,35 @@ export class JsFilesService {
     const filename: string = selectedFile.name;
     this.httpService.postPatch<any>('jsfiles', file, null).subscribe((data) => {
       if (data.status == 1) {
-        let minfilesArr = [];
+        let jsFilesArr: JSFile[] = [];
         let minfiles = localStorage.getItem('minfiles');
         if (minfiles == null) {
-          console.log(1);
-          minfilesArr = [
-            {
-              id: filename,
-              filename: filename,
-              data: data.compressedData,
-              'createdAt': new Date,
-              'updatedAt': new Date
-            }
-          ];
-          localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+          let jsfile = new JSFile;
+          jsfile.id = filename;
+          jsfile.filename = filename;
+          jsfile.compressedData = data.compressedData;
+          jsFilesArr.push(jsfile);
+          localStorage.setItem('minfiles', JSON.stringify(jsFilesArr));
         } else {
-          console.log(2);
-          minfilesArr = JSON.parse(minfiles);
-          let recordIndex = minfilesArr.findIndex(
-            (record: { filename: string }) => record.filename == filename
+          jsFilesArr = JSON.parse(minfiles);
+          let recordIndex = jsFilesArr.findIndex(
+            (record: JSFile) => record.filename == filename
           );
           if (recordIndex != -1) {
-            console.log(3);
-            minfilesArr[recordIndex].data = data.compressedData;
-            minfilesArr[recordIndex].updatedAt = new Date;
-            localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+            jsFilesArr[recordIndex].data = data.compressedData;
+            jsFilesArr[recordIndex].updatedAt = new Date;
+            localStorage.setItem('minfiles', JSON.stringify(jsFilesArr));
           } else {
-            console.log(4);
-            minfilesArr.push({ id: filename, filename: filename, data: data.compressedData,'createdAt': new Date, 'updatedAt': new Date });
-            localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+            let jsfile = new JSFile;
+            jsfile.id = filename;
+            jsfile.filename = filename;
+            jsfile.compressedData = data.compressedData;
+            jsFilesArr.push(jsfile);
+            // jsFilesArr.push({ id: filename, filename: filename, data: data.compressedData,'createdAt': new Date, 'updatedAt': new Date });
+            localStorage.setItem('minfiles', JSON.stringify(jsFilesArr));
           }
         }
-        this.jsFilesArray.next([...minfilesArr]);
-        // this.jsFiles.push(fileObj);
-        // this.jsFilesArry.next([...this.jsFiles]);
+        this.jsFilesArray.next([...jsFilesArr]);
       } else {
         // this.jsFiles = this.jsFiles.filter((item) => item.id !== fileObj.id);
         // this.jsFiles.push(fileObj);

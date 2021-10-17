@@ -1,3 +1,21 @@
+<ng-template #content let-modal>
+  <div class="modal-header bg-info">
+    <h4 class="modal-title " id="modal-basic-title">Edit JS File</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button class="btn-success upload-btn" ngbTooltip="save selected file">
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+</ng-template>
 <div>
   <input type="file" class="fileInput" (change)="onFileSelected($event)" #fileUpload accept=".js" />
   <div class="fileStyle">
@@ -11,78 +29,66 @@
           (click)="onRemoveSelecetd()">
           <mat-icon>delete</mat-icon>
         </button>
-        <button mat-raised-button class="btn-success upload-btn" ngbTooltip="confirm upload"
-          (click)="onUpladFile()">
+        <button mat-raised-button class="btn-success upload-btn" ngbTooltip="confirm upload" (click)="onUpladFile()">
           <mat-icon>cloud_upload</mat-icon>
         </button>
       </div>
     </ng-template>
-    <span [ngStyle]="{'border': (isJSFile) ? '2px solid black' : '2px solid red'}">{{ fileName || "No file uploaded yet."}}</span>
+    <span [ngStyle]="{'border': (isJSFile) ? '2px solid black' : '2px solid red'}">{{ fileName || "No file uploaded
+      yet."}}</span>
   </div>
   <div *ngIf="!isJSFile" style="text-align: center;"><span style="margin: auto;"><b>*only upload .js files
         please</b></span></div>
   <span class="top-wrapper-spacer"></span>
 </div>
 <div class="dtbl">
-  <p-table
-    #usersTbl
-    [value]="jsfiles"
-    styleClass="p-datatable-striped"
-    [(selection)]="selectedjsfiles"
-    dataKey="code"
-    [autoLayout]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    [scrollable]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-  >
+  <p-table #usersTbl [value]="jsfiles" styleClass="p-datatable-striped" [(selection)]="selectedjsfiles" dataKey="code"
+    [autoLayout]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true" [scrollable]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
     <ng-template pTemplate="caption">
       <div class="topSearch">
         <div>
-          <button
-            pButton
-            label="Clear"
-            class="p-button-outlined"
-            icon="pi pi-filter-slash"
-            (click)="clear(usersTbl)"
-          ></button>
+          <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+            (click)="clear(usersTbl)"></button>
         </div>
         <div>
           <span class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              (input)="applyFilterGlobal(usersTbl, $event, 'contains')"
-              placeholder="search..."
-            />
+            <input pInputText type="text" (input)="applyFilterGlobal(usersTbl, $event, 'contains')"
+              placeholder="search..." />
           </span>
         </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
         <th *ngFor="let col of columnsDef">
           <div fxLayoutAlign="center center">
-          {{col.header}}
-          <p-columnFilter type="text" field="col.name" display="menu"></p-columnFilter>
-        </div>
+            {{col.header}}
+            <p-columnFilter type="text" field="col.name" display="menu"></p-columnFilter>
+          </div>
         </th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-jsFile>
       <tr>
-        <td>
-          <p-tableCheckbox [value]="jsFile"></p-tableCheckbox>
-        </td>
         <td *ngFor="let col of columnsDef">
-          {{jsFile[col.field]}}
-      </td>
+          {{ col.isDate ? (jsFile[col.field] | date:'medium') : jsFile[col.field] }}
+        </td>
+        <td>
+          <div fxFlexFill fxLayoutGap="10px">
+            <button mat-raised-button class="btn-warning upload-btn" ngbTooltip="remove selected file"
+              (click)="onRemoveSelecetd()">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-raised-button class="btn-primary upload-btn" ngbTooltip="edit compressed data"
+              (click)="openDialog(content)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </td>
       </tr>
     </ng-template>
   </p-table>
