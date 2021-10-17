@@ -13,14 +13,14 @@ import { JsFilesService } from './js-files.service';
 export class JsFilesComponent implements OnInit {
 
   private jsfilesSubscription!: Subscription;
-  public jsfiles: [] = [];
+  public jsfiles: object[] = [];
   public selectedjsfiles: [] = [];
 
   iconsPath = environment.iconsPath;
 
   columnsDef = [
     { field: 'filename', name: 'filename', header: 'File Name' },
-    { field: 'minfilename', name: 'minfilename', header: 'Minified File Name' },
+    // { field: 'minfilename', name: 'minfilename', header: 'Minified File Name' },
     { field: 'createdAt', name: 'createdAt', header: 'Created At' },
     { field: 'updatedAt', name: 'updatedAt', header: 'Updated At' },
     { field: 'action', name: 'actions', header: 'Actions' }
@@ -33,10 +33,13 @@ export class JsFilesComponent implements OnInit {
   constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    // this.jsfilesService.getJsFiles();
-    // this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe(jsfiles => {
-    //   // this.jsfiles = jsfiles;
-    // })
+    this.jsfilesService.getJsFiles();
+    this.jsfilesSubscription = this.jsfilesService.getJsFilesList().subscribe(files => {
+      console.log('1');
+      this.jsfiles = files;
+
+    })
+    console.log(this.jsfilesSubscription);
   }
 
   applyFilterGlobal(table: Table, $event: any, stringVal: any) {

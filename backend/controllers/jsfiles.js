@@ -25,13 +25,6 @@ const jsfilesLog = new JSFilesLogger({
   onlyPrintInConsole: false,
 });
 
-async function minifyFiles(fileData) {
-  return await minify(fileData, {
-    mangle: true,
-    ecma: 8,
-    compress: false
-  }).code;
-}
 // get all listed jsfiles  
 exports.getJSFiles = (req, res, next) => {
   JSFile.find()

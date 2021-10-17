@@ -4,22 +4,23 @@ import { map } from 'rxjs/operators';
 import { HttpService } from 'src/app/services/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JsFilesService {
   private jsFile!: object;
-  private jsFiles: [] = [];
+  private jsFiles: object[] = [];
   private jsFilesArray = new Subject<object[]>();
 
   constructor(private httpService: HttpService) { }
 
   getJsFiles() {
-    this.httpService.getRemove<any>(null, 'jsFiles')
-      .subscribe(data => {
-        console.log(data);
-        this.jsFiles = data.jsFiles;
-        this.jsFilesArray.next([...data.jsFiles]);
-      });
+    let minfiles = localStorage.getItem('minfiles');
+    if (minfiles != null) {
+      this.jsFiles = JSON.parse(minfiles);
+      this.jsFilesArray.next([...JSON.parse(minfiles)]);
+    } else {
+      this.jsFilesArray.next([...this.jsFiles]);
+    }
   }
 
   getJsFilesList() {
@@ -36,34 +37,60 @@ export class JsFilesService {
 
   updateFile(jsFile: object, jsFileid: string) {
     console.log(jsFile);
-    return this.httpService.postPatch('jsFiles', jsFile, jsFileid, "put");
+    return this.httpService.postPatch('jsFiles', jsFile, jsFileid, 'put');
   }
 
   getJsFilesSelect() {
-    return this.httpService.getRemove<any>(null, 'jsFiles')
-      .pipe(map(data => {
+    return this.httpService.getRemove<any>(null, 'jsFiles').pipe(
+      map((data) => {
         return data.jsFiles.map((jsFile: object) => {
           return {
             // id: jsFile.id,
             // name: jsFile.name,
             // domainid: jsFile.domainid
-          }
+          };
         });
-      }));
+      })
+    );
   }
 
   uploadNewFile(file: FormData) {
-    const selectedFile = file.get('jsfileUpload');
-    console.log('1', selectedFile.valueOf();
+    const selectedFile: any = file.get('jsfileUpload');
+    const filename: string = selectedFile.name;
     this.httpService.postPatch<any>('jsfiles', file, null).subscribe((data) => {
       if (data.status == 1) {
+        let minfilesArr = [];
         let minfiles = localStorage.getItem('minfiles');
-        console.log('2', minfiles);
         if (minfiles == null) {
-          console.log('3', selectedFile);
-          // localStorage.setItem('minfiles',JSON.stringify({selectedFile['name']: data.compressedData }))
+          console.log(1);
+          minfilesArr = [
+            {
+              id: filename,
+              filename: filename,
+              data: data.compressedData,
+              'createdAt': new Date,
+              'updatedAt': new Date
+            }
+          ];
+          localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+        } else {
+          console.log(2);
+          minfilesArr = JSON.parse(minfiles);
+          let recordIndex = minfilesArr.findIndex(
+            (record: { filename: string }) => record.filename == filename
+          );
+          if (recordIndex != -1) {
+            console.log(3);
+            minfilesArr[recordIndex].data = data.compressedData;
+            minfilesArr[recordIndex].updatedAt = new Date;
+            localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+          } else {
+            console.log(4);
+            minfilesArr.push({ id: filename, filename: filename, data: data.compressedData,'createdAt': new Date, 'updatedAt': new Date });
+            localStorage.setItem('minfiles', JSON.stringify(minfilesArr));
+          }
         }
-
+        this.jsFilesArray.next([...minfilesArr]);
         // this.jsFiles.push(fileObj);
         // this.jsFilesArry.next([...this.jsFiles]);
       } else {
