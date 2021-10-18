@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "ts-node-dev app.ts"
+    "start": "ts-node-dev app.ts",
+    "run": "app.ts"
   },
   "dependencies": {
     "@node-minify/core": "^6.2.0",

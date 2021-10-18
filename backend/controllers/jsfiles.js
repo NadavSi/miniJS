@@ -39,6 +39,9 @@ charactersLength));
 // insert new jsfile
 exports.createJSFile = (req, res, next) => {
   let parsed = '';
+  if (!fs.existsSync('uploads')){
+    fs.mkdirSync('uploads');
+  }
   var form = formidable({ keepExtensions: true });
   form.parse(req, (err, fields, files) => {
     if (err) {
