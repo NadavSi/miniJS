@@ -3,18 +3,7 @@ const JSFileController = require("../controllers/jsfiles");
 
 var router = express.Router();
 
-// router.get("", JSFileController.getJSFiles);
-
-// router.get("/:id", JSFileController.getJSFile);
-
-// router.get("/dld/:id", JSFileController.getJSFileData);
-
 router.post("", JSFileController.createJSFile);
-
-// router.put("/:id", JSFileController.updateJSFile);
-
-// router.delete("/:id", JSFileController.deleteJSFile);
-
 
 var route, routes = [];
 //log routes

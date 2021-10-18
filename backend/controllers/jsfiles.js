@@ -25,36 +25,16 @@ const jsfilesLog = new JSFilesLogger({
   onlyPrintInConsole: false,
 });
 
-// get all listed jsfiles  
-exports.getJSFiles = (req, res, next) => {
-  JSFile.find()
-    .then((respJSFiles) => {
-      let returnedJSFiles = [];
-
-      for (let i = 0; i < respJSFiles.length; i++) {
-        returnedJSFiles.push(respJSFiles[i].transform());
-      }
-      res.status(200).json({
-        jsfiles: returnedJSFiles,
-      });
-    })
-    .catch();
-};
-
-// get single jsfile
-exports.getJSFile = (req, res, next) => {
-  JSFile.findOne({ _id: req.params.id })
-    .then((jsfileData) => {
-      if (jsfileData) {
-        res.status(200).json({ jsfile: jsfileData.transform() });
-      } else {
-        res.status(404).json({ status: "-1", message: "jsfileData not found!" });
-      }
-    })
-    .catch(err => {
-      res.status(201).json({ status: "-1", message: "jsfileData not found!" });
-    });
-};
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+charactersLength));
+ }
+ return result;
+}
 
 // insert new jsfile
 exports.createJSFile = (req, res, next) => {
@@ -62,27 +42,33 @@ exports.createJSFile = (req, res, next) => {
   var form = formidable({ keepExtensions: true });
   form.parse(req, (err, fields, files) => {
     if (err) {
-      console.log(err);
+      jsfilesLog.error('ERROR: ' + err);
       next(err);
       return;
     }
+    jsfilesLog.info('compressing file: ' + files.jsfileUpload.name);
+    const tempname = files.jsfileUpload.name.replace('.js', '_' + makeid(10) + '.tmp.js');
     minify({
       compressor: terser,
       input: files.jsfileUpload.path,
-      output: 'bar.js',
+      output: 'uploads/' + tempname,
       toplevel: true,
       parse: {
         drop_console: true,
-        hoist_funs: true
+        hoist_funs: true 
       },
       callback: function (err, min) {
+        jsfilesLog.info('created temp file: ' + tempname);
+        fsReader.unlinkSync('uploads/' + tempname);
         if (err) {
+          jsfilesLog.error('compression failed on file: ' + files.jsfileUpload.name + ', ERROR: ' + err);
           res.status(200).json({
             status: 0,
             compressedData: '',
             error: err
           });
-        } else { 
+        } else {
+          jsfilesLog.info('compression success on file: ' + files.jsfileUpload.name);
           res.status(200).json({
             status: 1,
             compressedData: min
@@ -91,14 +77,4 @@ exports.createJSFile = (req, res, next) => {
       }
     });
   });
-};
-
-exports.updateJSFile = (req, res, next) => {
-  JSFile.findOneAndUpdate({ _id: req.params.id }, {
-    updatedAt: new Date(),
-    ...req.body
-  })
-    .then((jsfileData) => {
-      res.status(200).json({ status: "1", message: "jsfileData updated" });
-    });
 };

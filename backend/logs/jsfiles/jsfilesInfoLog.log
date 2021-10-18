@@ -1,0 +1,3 @@
+[2021-10-18 18:48:06.977]  [INFO] [9864] [D:\work\projects\angularProjects\miniJS\backend\controllers\jsfiles.js:49] "compressing file: testJs.js"  
+[2021-10-18 18:48:07.0005]  [INFO] [9864] [D:\work\projects\angularProjects\miniJS\backend\controllers\jsfiles.js:61] "created temp file: testJs_vaw6O1RZBE.tmp.js"  
+[2021-10-18 18:48:07.0007]  [INFO] [9864] [D:\work\projects\angularProjects\miniJS\backend\controllers\jsfiles.js:71] "compression success on file: testJs.js"  
