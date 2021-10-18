@@ -1,9 +1,8 @@
 import { JSFile } from './../../models/file.model';
-import { trigger } from '@angular/animations';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpService } from 'src/app/services/http.service';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root',
@@ -33,9 +32,7 @@ export class JsFilesService {
     let selectedRecord = this.jsFiles.find(
       (record: JSFile) => record.id == recordid
     );
-    console.log(selectedRecord);
     let arrayWithoutRecord = this.jsFiles.filter(record => record.id != recordid);
-    console.log(arrayWithoutRecord);
     selectedRecord.compressedData = cdata;
     selectedRecord.updatedAt = new Date;
     arrayWithoutRecord.push(selectedRecord);
@@ -87,5 +84,18 @@ export class JsFilesService {
       // this.isRefresh.emit(true);
       return 'file uploaded';
     });
+  }
+
+  downloadFile(recordid: string) {
+    let selectedRecord = this.jsFiles.find((record: JSFile) => record.id == recordid);
+    let file = new Blob([selectedRecord.compressedData], { type: 'text/javascript;charset=utf-8' });
+    saveAs(file, selectedRecord.filename.replace('.js', '.min.js'));
+  }
+
+  deleteFile(recordid: string) {
+    let arrayWithoutRecord = this.jsFiles.filter(record => record.id != recordid);
+    this.jsFiles = arrayWithoutRecord;
+    localStorage.setItem('minfiles', JSON.stringify(this.jsFiles));
+    this.jsFilesArray.next([...this.jsFiles]);
   }
 }

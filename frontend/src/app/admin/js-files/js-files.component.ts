@@ -84,6 +84,14 @@ export class JsFilesComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
+  downloadFile(recordid: string) {
+    this.jsfilesService.downloadFile(recordid);
+  }
+
+  deleteFile(recordid: string) {
+    this.jsfilesService.deleteFile(recordid);
+  }
+
   openDialog(recordid: string, content: any) {
     this.compressedData = (this.jsfiles.find(file => file.id == recordid)).compressedData;
     this.recordid = recordid;
