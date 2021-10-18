@@ -1,1 +1,1 @@
-function testme(){console.log("fdgfdgd");obj=[]}
+function testme(){console.log("fdgfdgd"),obj=[],a=5,b=0}

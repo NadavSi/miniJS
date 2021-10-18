@@ -26,35 +26,22 @@ export class JsFilesService {
   }
 
   getJsFilesList() {
-    // this.jsFilesArray.next([...this.jsFiles])
     return this.jsFilesArray.asObservable();
   }
 
-  getFile(id: string) {
-    return this.httpService.getRemove<any>(id, 'jsFiles');
-  }
-
-  createFile(jsFile: JSFile) {
-    return this.httpService.postPatch('jsFiles', jsFile, null);
-  }
-
-  updateFile(jsFile: JSFile, jsFileid: string) {
-    console.log(jsFile);
-    return this.httpService.postPatch('jsFiles', jsFile, jsFileid, 'put');
-  }
-
-  getJsFilesSelect() {
-    return this.httpService.getRemove<any>(null, 'jsFiles').pipe(
-      map((data) => {
-        return data.jsFiles.map((jsFile: JSFile) => {
-          return {
-            // id: jsFile.id,
-            // name: jsFile.name,
-            // domainid: jsFile.domainid
-          };
-        });
-      })
+  updateFile(recordid: string, cdata: any) {
+    let selectedRecord = this.jsFiles.find(
+      (record: JSFile) => record.id == recordid
     );
+    console.log(selectedRecord);
+    let arrayWithoutRecord = this.jsFiles.filter(record => record.id != recordid);
+    console.log(arrayWithoutRecord);
+    selectedRecord.compressedData = cdata;
+    selectedRecord.updatedAt = new Date;
+    arrayWithoutRecord.push(selectedRecord);
+    this.jsFiles = arrayWithoutRecord;
+    localStorage.setItem('minfiles', JSON.stringify(this.jsFiles));
+    this.jsFilesArray.next([...this.jsFiles]);
   }
 
   uploadNewFile(file: FormData) {
@@ -90,6 +77,7 @@ export class JsFilesService {
             localStorage.setItem('minfiles', JSON.stringify(jsFilesArr));
           }
         }
+        this.jsFiles = jsFilesArr;
         this.jsFilesArray.next([...jsFilesArr]);
       } else {
         // this.jsFiles = this.jsFiles.filter((item) => item.id !== fileObj.id);

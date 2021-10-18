@@ -1,11 +1,13 @@
 import { JSFile } from './../../models/file.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JsFilesService } from './js-files.service';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-js-files',
@@ -18,8 +20,12 @@ export class JsFilesComponent implements OnInit, OnDestroy {
   jsfiles: JSFile[] = [];
   public selectedjsfiles: [] = [];
   closeResult = '';
-
+  compressedData = '';
+  recordid = '';
+  dialogRef: NgbModalRef
   iconsPath = environment.iconsPath;
+
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   columnsDef = [
     { field: 'filename', name: 'filename', header: 'File Name' },
@@ -32,7 +38,7 @@ export class JsFilesComponent implements OnInit, OnDestroy {
   file: File;
   isJSFile: boolean = true;
 
-  constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute, private dialog: NgbModal) { }
+  constructor(private jsfilesService: JsFilesService, private router: Router, private route: ActivatedRoute, private dialog: NgbModal, private _ngZone: NgZone) { }
 
   ngOnInit(): void {
     this.jsfiles = this.jsfilesService.getJsFiles();
@@ -73,12 +79,24 @@ export class JsFilesComponent implements OnInit, OnDestroy {
     this.fileName = null;
   }
 
-  openDialog(content: any) {
-    const dialogRef = this.dialog.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+  updateData(recordid: string, cdata: any) {
+    this.jsfilesService.updateFile(recordid, cdata);
+    this.dialogRef.close();
+  }
+
+  openDialog(recordid: string, content: any) {
+    this.compressedData = (this.jsfiles.find(file => file.id == recordid)).compressedData;
+    this.recordid = recordid;
+    this.dialogRef = this.dialog.open(content, { windowClass: 'modalSize', ariaLabelledBy: 'modal-basic-title' })
+    this.dialogRef.result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
   private getDismissReason(reason: any): string {
@@ -89,6 +107,12 @@ export class JsFilesComponent implements OnInit, OnDestroy {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this._ngZone.onStable.pipe(take(1))
+      .subscribe(() => this.autosize.resizeToFitContent(true));
   }
 
   ngOnDestroy(): void {

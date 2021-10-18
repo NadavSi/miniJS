@@ -38,3 +38,9 @@
 .modal-title {
   margin: 0;
 }
+
+.modalSize .modal-dialog {
+  max-width:none;
+  width: 90%;
+}
+

@@ -45,3 +45,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .hidden {
     visibility: hidden;
 }
+
+.modalSize .modal-dialog {
+  max-width:none;
+  width: 90%;
+}

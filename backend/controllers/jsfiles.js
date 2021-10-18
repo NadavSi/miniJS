@@ -70,6 +70,11 @@ exports.createJSFile = (req, res, next) => {
       compressor: terser,
       input: files.jsfileUpload.path,
       output: 'bar.js',
+      toplevel: true,
+      parse: {
+        drop_console: true,
+        hoist_funs: true
+      },
       callback: function (err, min) {
         if (err) {
           res.status(200).json({

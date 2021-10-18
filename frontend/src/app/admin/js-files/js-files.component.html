@@ -1,19 +1,32 @@
 <ng-template #content let-modal>
   <div class="modal-header bg-info">
-    <h4 class="modal-title " id="modal-basic-title">Edit JS File</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <h4 class="modal-title " id="modal-basic-title">Edit JS File <b>{{ recordid }}</b></h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')" style="border: none; background: none;">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <form>
-
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Compressed JS Data</mat-label>
+        <textarea matInput
+                  #cdata
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="20">{{compressedData}}</textarea>
+      </mat-form-field>
     </form>
   </div>
   <div class="modal-footer">
-    <button mat-raised-button class="btn-success upload-btn" ngbTooltip="save selected file">
-      <mat-icon>save</mat-icon>
+    <div fxFlexFill fxLayoutGap="10px">
+      <button mat-raised-button class="btn-success upload-btn" (click)="closeDialog()">
+        <mat-icon>save</mat-icon>
+      </button>
+    <button mat-raised-button class="btn-danger upload-btn" ngbTooltip="save selected file" (click)="updateData(recordid, cdata.value)">
+      <mat-icon>close</mat-icon>
     </button>
+    </div>
   </div>
 </ng-template>
 <div>
@@ -84,7 +97,7 @@
               <mat-icon>delete</mat-icon>
             </button>
             <button mat-raised-button class="btn-primary upload-btn" ngbTooltip="edit compressed data"
-              (click)="openDialog(content)">
+              (click)="openDialog(jsFile.id, content)">
               <mat-icon>edit</mat-icon>
             </button>
           </div>
